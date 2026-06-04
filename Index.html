@@ -1,0 +1,2181 @@
+cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuronPay — Financial Infrastructure for Modern Companies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Editorial+New:ital,wght@0,400;1,400&family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+:root {
+  --black: #000000;
+  --white: #ffffff;
+  --gray-100: #f5f5f5;
+  --gray-200: #e5e5e5;
+  --gray-300: #d4d4d4;
+  --gray-400: #a3a3a3;
+  --gray-500: #737373;
+  --gray-600: #525252;
+  --gray-700: #404040;
+  --gray-800: #262626;
+  --gray-900: #171717;
+  --gray-950: #0a0a0a;
+  --font-display: 'Syne', sans-serif;
+  --font-serif: 'Georgia', serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  background: var(--black);
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-display);
+  background: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CURSOR ── */
+#cursor {
+  width: 12px; height: 12px;
+  background: var(--white);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 10000;
+  mix-blend-mode: difference;
+  transition: transform 0.15s ease;
+}
+#cursor-follower {
+  width: 40px; height: 40px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), width 0.3s, height 0.3s, opacity 0.3s;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--gray-700); }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 28px 60px;
+  mix-blend-mode: difference;
+  transition: padding 0.4s ease;
+}
+nav.scrolled { padding: 18px 60px; }
+.nav-logo {
+  font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+  color: var(--white); text-decoration: none;
+}
+.nav-links {
+  display: flex; gap: 40px; list-style: none;
+}
+.nav-links a {
+  color: var(--gray-400); text-decoration: none;
+  font-size: 13px; font-weight: 500; letter-spacing: 0.3px;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-cta {
+  display: flex; gap: 16px; align-items: center;
+}
+.btn-ghost {
+  background: none; border: 1px solid var(--gray-700);
+  color: var(--white); padding: 10px 24px;
+  font-size: 13px; font-weight: 500; letter-spacing: 0.3px;
+  cursor: none; transition: all 0.2s; font-family: var(--font-display);
+}
+.btn-ghost:hover { border-color: var(--white); }
+.btn-solid {
+  background: var(--white); border: 1px solid var(--white);
+  color: var(--black); padding: 10px 24px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.3px;
+  cursor: none; transition: all 0.2s; font-family: var(--font-display);
+}
+.btn-solid:hover { background: var(--gray-200); }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 140px 60px 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--gray-800); padding: 6px 14px;
+  margin-bottom: 40px; font-size: 11px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--gray-400); font-family: var(--font-mono);
+}
+.hero-badge::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--white);
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+.hero-title {
+  font-size: clamp(52px, 5.5vw, 88px);
+  font-weight: 800; line-height: 1.0;
+  letter-spacing: -3px;
+  margin-bottom: 28px;
+}
+.hero-title em {
+  font-style: italic; font-weight: 400;
+  font-family: Georgia, serif;
+}
+.hero-sub {
+  font-size: 17px; line-height: 1.65;
+  color: var(--gray-400); max-width: 460px;
+  margin-bottom: 48px; font-weight: 400;
+}
+.hero-actions {
+  display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+}
+.btn-hero-primary {
+  background: var(--white); color: var(--black);
+  padding: 16px 36px; font-size: 14px; font-weight: 600;
+  border: none; cursor: none; letter-spacing: 0.2px;
+  font-family: var(--font-display);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-hero-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 40px rgba(255,255,255,0.15); }
+.btn-hero-secondary {
+  background: none; border: 1px solid var(--gray-700);
+  color: var(--white); padding: 16px 36px; font-size: 14px;
+  font-weight: 500; cursor: none; letter-spacing: 0.2px;
+  font-family: var(--font-display); transition: border-color 0.2s;
+}
+.btn-hero-secondary:hover { border-color: var(--gray-400); }
+.hero-metrics {
+  display: flex; gap: 48px; margin-top: 72px;
+  border-top: 1px solid var(--gray-900); padding-top: 40px;
+}
+.hero-metric-value {
+  font-size: 28px; font-weight: 800; letter-spacing: -1px;
+}
+.hero-metric-label {
+  font-size: 12px; color: var(--gray-500); margin-top: 4px;
+  letter-spacing: 0.5px; font-family: var(--font-mono);
+}
+
+/* HERO MOCKUP */
+.hero-visual {
+  display: flex; justify-content: center; align-items: center;
+  position: relative; padding: 40px;
+}
+.hero-mockup {
+  width: 100%; max-width: 520px;
+  background: var(--gray-950); border: 1px solid var(--gray-800);
+  padding: 0; overflow: hidden;
+  box-shadow: 0 60px 120px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05);
+  position: relative;
+}
+.mockup-topbar {
+  background: var(--gray-900); padding: 14px 20px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid var(--gray-800);
+}
+.mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+.mockup-dot:nth-child(1) { background: var(--gray-700); }
+.mockup-dot:nth-child(2) { background: var(--gray-700); }
+.mockup-dot:nth-child(3) { background: var(--gray-700); }
+.mockup-url {
+  margin-left: 12px; flex: 1; background: var(--gray-800);
+  padding: 5px 12px; font-size: 11px; color: var(--gray-500);
+  font-family: var(--font-mono); border-radius: 3px;
+}
+.mockup-body { padding: 28px; }
+.mockup-header-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 28px;
+}
+.mockup-brand { font-size: 14px; font-weight: 700; letter-spacing: -0.3px; }
+.mockup-status {
+  font-size: 10px; font-family: var(--font-mono);
+  color: var(--gray-400); border: 1px solid var(--gray-700);
+  padding: 3px 10px; letter-spacing: 1px;
+}
+.mockup-balance-label {
+  font-size: 11px; color: var(--gray-500); letter-spacing: 1.5px;
+  text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 8px;
+}
+.mockup-balance-value {
+  font-size: 42px; font-weight: 800; letter-spacing: -2px; margin-bottom: 28px;
+}
+.mockup-balance-value span { font-size: 22px; color: var(--gray-500); font-weight: 400; }
+.mockup-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;
+}
+.mockup-tile {
+  background: var(--gray-900); border: 1px solid var(--gray-800);
+  padding: 16px; border-radius: 2px;
+}
+.mockup-tile-label { font-size: 10px; color: var(--gray-500); font-family: var(--font-mono); letter-spacing: 1px; margin-bottom: 6px; }
+.mockup-tile-value { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
+.mockup-tile-change { font-size: 10px; color: var(--gray-400); font-family: var(--font-mono); margin-top: 2px; }
+.mockup-chart-area {
+  height: 80px; position: relative; margin-bottom: 20px;
+  border-bottom: 1px solid var(--gray-800);
+}
+.mockup-chart-svg { width: 100%; height: 100%; }
+.mockup-txn-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid var(--gray-900);
+}
+.mockup-txn-name { font-size: 12px; font-weight: 500; }
+.mockup-txn-meta { font-size: 10px; color: var(--gray-500); font-family: var(--font-mono); }
+.mockup-txn-amount { font-size: 13px; font-weight: 600; font-family: var(--font-mono); }
+.mockup-glow {
+  position: absolute; top: -80px; right: -80px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.floating-pill {
+  position: absolute; background: var(--gray-900);
+  border: 1px solid var(--gray-700); padding: 10px 16px;
+  font-size: 12px; display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-weight: 500;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  animation: float-pill 4s ease-in-out infinite;
+}
+.floating-pill:nth-child(1) { top: 10%; right: -10%; animation-delay: 0s; }
+.floating-pill:nth-child(2) { bottom: 20%; left: -8%; animation-delay: 1.5s; }
+.pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--white); }
+@keyframes float-pill {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ── LOGOS ── */
+#logos {
+  padding: 80px 60px; border-top: 1px solid var(--gray-900);
+  border-bottom: 1px solid var(--gray-900);
+}
+.logos-label {
+  text-align: center; font-size: 11px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--gray-600);
+  font-family: var(--font-mono); margin-bottom: 48px;
+}
+.logos-track {
+  display: flex; align-items: center; justify-content: center;
+  gap: 72px; flex-wrap: wrap;
+}
+.logo-item {
+  font-size: 18px; font-weight: 700; color: var(--gray-700);
+  letter-spacing: -0.5px; transition: color 0.3s;
+  white-space: nowrap;
+}
+.logo-item:hover { color: var(--gray-400); }
+
+/* ── SECTION BASE ── */
+section { position: relative; overflow: hidden; }
+.section-label {
+  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gray-600); font-family: var(--font-mono); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 16px;
+}
+.section-label::before {
+  content: ''; width: 32px; height: 1px; background: var(--gray-700);
+}
+.section-title {
+  font-size: clamp(40px, 4.5vw, 72px); font-weight: 800;
+  letter-spacing: -2.5px; line-height: 1.05;
+}
+.section-title em {
+  font-style: italic; font-family: Georgia, serif; font-weight: 400;
+}
+.section-sub {
+  font-size: 17px; color: var(--gray-400); line-height: 1.7;
+  max-width: 540px; font-weight: 400; margin-top: 20px;
+}
+
+/* ── STATS ── */
+#stats {
+  padding: 140px 60px; background: var(--gray-950);
+}
+.stats-top {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+  align-items: start; margin-bottom: 100px;
+}
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+  border: 1px solid var(--gray-800);
+}
+.stat-item {
+  padding: 48px 40px; border-right: 1px solid var(--gray-800);
+  position: relative; overflow: hidden;
+  transition: background 0.3s;
+}
+.stat-item:last-child { border-right: none; }
+.stat-item:hover { background: rgba(255,255,255,0.02); }
+.stat-number {
+  font-size: clamp(36px, 3.5vw, 56px); font-weight: 800;
+  letter-spacing: -2px; line-height: 1;
+  margin-bottom: 12px;
+}
+.stat-number sup {
+  font-size: 50%; letter-spacing: 0; vertical-align: super;
+}
+.stat-label {
+  font-size: 12px; color: var(--gray-500); font-family: var(--font-mono);
+  letter-spacing: 0.5px;
+}
+.stat-desc {
+  font-size: 13px; color: var(--gray-600); margin-top: 8px; line-height: 1.5;
+}
+
+/* ── INFRA ── */
+#infra {
+  padding: 160px 60px;
+}
+.infra-layout {
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 100px; align-items: start;
+}
+.infra-cards {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--gray-800);
+  margin-top: 60px;
+}
+.infra-card {
+  background: var(--black); padding: 36px 32px;
+  transition: background 0.3s;
+  position: relative; overflow: hidden;
+}
+.infra-card::after {
+  content: ''; position: absolute; inset: 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+.infra-card:hover { background: var(--gray-950); }
+.infra-card:hover::after { border-bottom-color: var(--white); }
+.infra-card-icon {
+  width: 40px; height: 40px; border: 1px solid var(--gray-700);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px; font-size: 16px;
+}
+.infra-card-title {
+  font-size: 16px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.3px;
+}
+.infra-card-desc {
+  font-size: 13px; color: var(--gray-500); line-height: 1.6;
+}
+.infra-visual {
+  position: sticky; top: 120px;
+}
+.infra-terminal {
+  background: var(--gray-950); border: 1px solid var(--gray-800);
+  padding: 0; overflow: hidden;
+}
+.terminal-header {
+  background: var(--gray-900); padding: 14px 20px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid var(--gray-800);
+}
+.t-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gray-700); }
+.terminal-title {
+  margin-left: 8px; font-size: 12px; color: var(--gray-500);
+  font-family: var(--font-mono);
+}
+.terminal-body { padding: 28px; font-family: var(--font-mono); font-size: 12px; line-height: 1.8; }
+.t-line { margin-bottom: 2px; }
+.t-comment { color: var(--gray-600); }
+.t-key { color: var(--gray-400); }
+.t-str { color: var(--gray-300); }
+.t-num { color: var(--white); font-weight: 500; }
+.t-bracket { color: var(--gray-500); }
+.t-cursor {
+  display: inline-block; width: 2px; height: 14px;
+  background: var(--white); margin-left: 2px; vertical-align: middle;
+  animation: blink 1.2s infinite;
+}
+@keyframes blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
+
+/* ── BANKING ── */
+#banking {
+  padding: 160px 60px; background: var(--gray-950);
+  border-top: 1px solid var(--gray-800);
+}
+.banking-layout {
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 100px; align-items: center;
+}
+.banking-visual {
+  position: relative;
+}
+.bank-card-stack {
+  position: relative; height: 360px; perspective: 1000px;
+}
+.bank-card {
+  width: 340px; height: 200px;
+  border: 1px solid var(--gray-700);
+  position: absolute; left: 0;
+  padding: 28px; display: flex; flex-direction: column;
+  justify-content: space-between; transition: transform 0.5s ease;
+}
+.bank-card:nth-child(1) { background: var(--black); top: 0; z-index: 3; transform: translateY(0) rotate(-2deg); }
+.bank-card:nth-child(2) { background: var(--gray-900); top: 30px; z-index: 2; transform: translateY(0) rotate(1deg); }
+.bank-card:nth-child(3) { background: var(--gray-800); top: 60px; z-index: 1; transform: translateY(0) rotate(3deg); }
+.bank-card:nth-child(1):hover { transform: translateY(-10px) rotate(-1deg); }
+.bank-card-chip {
+  width: 32px; height: 24px; background: var(--gray-700);
+  border-radius: 3px; display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2px; padding: 4px;
+}
+.chip-cell { background: var(--gray-600); border-radius: 1px; }
+.bank-card-number {
+  font-family: var(--font-mono); font-size: 14px; letter-spacing: 2px;
+  color: var(--gray-400);
+}
+.bank-card-footer { display: flex; justify-content: space-between; align-items: flex-end; }
+.bank-card-name { font-size: 13px; font-weight: 600; letter-spacing: 1px; }
+.bank-card-brand { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; color: var(--gray-400); }
+
+.banking-features { margin-top: 48px; }
+.banking-feature {
+  display: flex; gap: 20px; align-items: flex-start;
+  padding: 24px 0; border-bottom: 1px solid var(--gray-900);
+}
+.banking-feature:last-child { border-bottom: none; }
+.feature-num {
+  font-size: 11px; font-family: var(--font-mono); color: var(--gray-700);
+  min-width: 24px; margin-top: 2px;
+}
+.feature-body h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.2px; }
+.feature-body p { font-size: 13px; color: var(--gray-500); line-height: 1.6; }
+
+/* ── CRYPTO ── */
+#crypto {
+  padding: 160px 60px;
+}
+.crypto-header { text-align: center; margin-bottom: 80px; }
+.crypto-header .section-label { justify-content: center; }
+.crypto-header .section-label::before { display: none; }
+.crypto-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--gray-800); border: 1px solid var(--gray-800);
+  margin-bottom: 1px;
+}
+.crypto-card {
+  background: var(--black); padding: 52px 44px;
+  transition: background 0.3s; position: relative; overflow: hidden;
+}
+.crypto-card:hover { background: var(--gray-950); }
+.crypto-symbol {
+  font-size: 13px; font-family: var(--font-mono); color: var(--gray-500);
+  letter-spacing: 2px; margin-bottom: 16px;
+}
+.crypto-name {
+  font-size: 28px; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px;
+}
+.crypto-price {
+  font-size: 15px; font-family: var(--font-mono); color: var(--gray-400);
+  margin-bottom: 32px;
+}
+.crypto-chart {
+  height: 60px; margin-bottom: 28px; position: relative;
+}
+.crypto-chart svg { width: 100%; height: 100%; }
+.crypto-feature { font-size: 13px; color: var(--gray-500); line-height: 1.7; }
+.crypto-bottom {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--gray-800);
+}
+.crypto-bottom-card {
+  background: var(--black); padding: 36px 44px;
+  transition: background 0.3s;
+}
+.crypto-bottom-card:hover { background: var(--gray-950); }
+.crypto-bottom-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.3px; }
+.crypto-bottom-desc { font-size: 13px; color: var(--gray-500); line-height: 1.6; }
+
+/* ── BLACK CARD ── */
+#blackcard {
+  padding: 160px 60px;
+  background: var(--gray-950);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; text-align: center;
+  min-height: 100vh;
+  border-top: 1px solid var(--gray-800);
+}
+.blackcard-label { margin-bottom: 32px; }
+.blackcard-title {
+  font-size: clamp(52px, 6vw, 100px); font-weight: 800;
+  letter-spacing: -4px; line-height: 0.95; margin-bottom: 32px;
+}
+.blackcard-sub {
+  font-size: 17px; color: var(--gray-400); line-height: 1.65;
+  max-width: 500px; margin: 0 auto 80px; font-weight: 400;
+}
+.card-3d-wrapper {
+  width: 480px; height: 290px; perspective: 1000px;
+  margin: 0 auto 80px; position: relative;
+}
+.card-3d {
+  width: 100%; height: 100%;
+  background: #000; border: 1px solid rgba(255,255,255,0.12);
+  position: relative; transform-style: preserve-3d;
+  transition: transform 0.1s ease;
+  box-shadow:
+    0 40px 80px rgba(0,0,0,0.8),
+    0 0 0 1px rgba(255,255,255,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.card-3d::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(255,255,255,0.03) 100%);
+  pointer-events: none;
+}
+.card-inner { padding: 36px 40px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; position: relative; z-index: 1; }
+.card-logo-row { display: flex; justify-content: space-between; align-items: center; }
+.card-wordmark { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+.card-contactless {
+  width: 24px; height: 24px; border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%; position: relative;
+}
+.card-chip-row {
+  display: flex; align-items: center; gap: 20px;
+}
+.card-chip-visual {
+  width: 44px; height: 34px; background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15); border-radius: 4px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 5px;
+}
+.chip-c { background: rgba(255,255,255,0.1); border-radius: 1px; }
+.card-nfc {
+  font-size: 10px; color: rgba(255,255,255,0.3); font-family: var(--font-mono);
+  letter-spacing: 1px;
+}
+.card-number-row {
+  font-family: var(--font-mono); font-size: 18px;
+  letter-spacing: 4px; color: rgba(255,255,255,0.5);
+}
+.card-bottom {
+  display: flex; justify-content: space-between; align-items: flex-end;
+}
+.card-holder { font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+.card-brand-mark { font-size: 24px; font-weight: 900; letter-spacing: -1px; }
+.card-shine {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%);
+  opacity: 0; transition: opacity 0.3s;
+}
+.card-3d:hover .card-shine { opacity: 1; }
+.blackcard-perks {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+  max-width: 900px; text-align: left;
+}
+.perk-item { border-top: 1px solid var(--gray-800); padding-top: 24px; }
+.perk-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.2px; }
+.perk-desc { font-size: 12px; color: var(--gray-500); line-height: 1.6; font-family: var(--font-mono); }
+
+/* ── AUTOMATION ── */
+#automation {
+  padding: 160px 60px;
+}
+.automation-layout {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start;
+}
+.automation-visual { position: sticky; top: 120px; }
+.api-flow {
+  display: flex; flex-direction: column; gap: 1px;
+  border: 1px solid var(--gray-800); background: var(--gray-800);
+}
+.api-node {
+  background: var(--black); padding: 20px 24px;
+  display: flex; align-items: center; gap: 16px;
+  transition: background 0.2s;
+}
+.api-node:hover { background: var(--gray-950); }
+.api-node-icon {
+  width: 32px; height: 32px; background: var(--gray-900);
+  border: 1px solid var(--gray-700);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; flex-shrink: 0;
+}
+.api-node-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.api-node-type { font-size: 10px; color: var(--gray-500); font-family: var(--font-mono); letter-spacing: 1px; }
+.api-connector {
+  width: 1px; height: 20px; background: var(--gray-800);
+  margin-left: 39px;
+}
+.automation-list { margin-top: 48px; }
+.auto-item {
+  display: flex; gap: 20px; padding: 24px 0;
+  border-bottom: 1px solid var(--gray-900); align-items: flex-start;
+}
+.auto-item:last-child { border-bottom: none; }
+.auto-num { font-size: 11px; font-family: var(--font-mono); color: var(--gray-700); min-width: 24px; margin-top: 2px; }
+.auto-content h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.2px; }
+.auto-content p { font-size: 13px; color: var(--gray-500); line-height: 1.6; }
+
+/* ── SECURITY ── */
+#security {
+  padding: 160px 60px; background: var(--gray-950);
+  border-top: 1px solid var(--gray-800);
+}
+.security-layout {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center;
+}
+.security-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--gray-800); border: 1px solid var(--gray-800);
+}
+.sec-card {
+  background: var(--gray-950); padding: 36px 32px;
+  transition: background 0.3s;
+}
+.sec-card:hover { background: var(--gray-900); }
+.sec-icon {
+  width: 36px; height: 36px; border: 1px solid var(--gray-700);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px; font-size: 14px;
+}
+.sec-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.2px; }
+.sec-desc { font-size: 12px; color: var(--gray-500); line-height: 1.6; font-family: var(--font-mono); }
+.security-badges {
+  display: flex; flex-direction: column; gap: 16px; margin-top: 48px;
+}
+.sec-badge {
+  display: flex; align-items: center; gap: 16px;
+  border: 1px solid var(--gray-800); padding: 16px 20px;
+  background: var(--black);
+}
+.sec-badge-mark {
+  width: 40px; height: 40px; border: 1px solid var(--gray-700);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  font-family: var(--font-mono); flex-shrink: 0;
+}
+.sec-badge-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.sec-badge-desc { font-size: 11px; color: var(--gray-500); font-family: var(--font-mono); }
+
+/* ── ANALYTICS ── */
+#analytics {
+  padding: 160px 60px;
+}
+.analytics-layout {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start;
+}
+.analytics-visual { position: sticky; top: 120px; }
+.analytics-panel {
+  background: var(--gray-950); border: 1px solid var(--gray-800);
+  overflow: hidden;
+}
+.analytics-panel-header {
+  padding: 20px 24px; border-bottom: 1px solid var(--gray-800);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.analytics-panel-title { font-size: 13px; font-weight: 600; letter-spacing: -0.2px; }
+.analytics-panel-meta { font-size: 11px; font-family: var(--font-mono); color: var(--gray-500); }
+.analytics-chart-wrapper { padding: 24px; }
+.analytics-chart { height: 180px; position: relative; }
+.bar-chart {
+  display: flex; align-items: flex-end; gap: 8px;
+  height: 100%; padding-bottom: 0;
+}
+.bar-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 6px; height: 100%;
+  justify-content: flex-end;
+}
+.bar-fill {
+  width: 100%; background: var(--gray-700);
+  transition: background 0.2s; position: relative; overflow: hidden;
+  min-height: 4px;
+}
+.bar-fill::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--white);
+}
+.bar-label { font-size: 9px; font-family: var(--font-mono); color: var(--gray-600); }
+.analytics-sub-panels {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--gray-800); border: 1px solid var(--gray-800);
+  border-top: none;
+}
+.mini-panel {
+  background: var(--gray-950); padding: 20px 24px;
+}
+.mini-panel-label { font-size: 10px; font-family: var(--font-mono); color: var(--gray-500); letter-spacing: 1px; margin-bottom: 8px; }
+.mini-panel-value { font-size: 22px; font-weight: 800; letter-spacing: -1px; }
+.mini-panel-trend { font-size: 11px; color: var(--gray-400); font-family: var(--font-mono); margin-top: 4px; }
+.analytics-features { margin-top: 48px; }
+.analytics-feature {
+  padding: 24px 0; border-bottom: 1px solid var(--gray-900);
+  display: flex; gap: 20px; align-items: flex-start;
+}
+.analytics-feature:last-child { border-bottom: none; }
+
+/* ── TIMELINE ── */
+#timeline {
+  padding: 160px 60px; background: var(--gray-950);
+  border-top: 1px solid var(--gray-800);
+}
+.timeline-header { text-align: center; margin-bottom: 100px; }
+.timeline-header .section-label { justify-content: center; }
+.timeline-header .section-label::before { display: none; }
+.timeline-track {
+  position: relative; display: flex; flex-direction: column; gap: 0;
+  max-width: 800px; margin: 0 auto;
+}
+.timeline-line {
+  position: absolute; left: 19px; top: 0; bottom: 0;
+  width: 1px; background: var(--gray-800);
+}
+.timeline-item {
+  display: flex; gap: 40px; align-items: flex-start;
+  padding: 48px 0; border-bottom: 1px solid var(--gray-900);
+  position: relative;
+}
+.timeline-item:last-child { border-bottom: none; }
+.timeline-dot {
+  width: 40px; height: 40px; border: 1px solid var(--gray-700);
+  background: var(--gray-950); display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0; position: relative; z-index: 1;
+  font-size: 11px; font-family: var(--font-mono); color: var(--gray-500);
+}
+.timeline-dot.active {
+  border-color: var(--white); background: var(--white);
+  color: var(--black); font-weight: 700;
+}
+.timeline-content { padding-top: 8px; }
+.timeline-phase {
+  font-size: 11px; font-family: var(--font-mono); color: var(--gray-600);
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
+}
+.timeline-title {
+  font-size: 24px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 12px;
+}
+.timeline-desc { font-size: 14px; color: var(--gray-400); line-height: 1.7; }
+
+/* ── COMPARISON ── */
+#comparison {
+  padding: 160px 60px;
+}
+.comparison-header { margin-bottom: 80px; }
+.comparison-table-wrapper { overflow-x: auto; }
+.comparison-table {
+  width: 100%; border-collapse: collapse;
+}
+.comparison-table th {
+  padding: 20px 28px; text-align: left; font-size: 13px; font-weight: 600;
+  border-bottom: 2px solid var(--gray-800); white-space: nowrap;
+}
+.comparison-table th:first-child { width: 220px; }
+.comparison-table th.highlight {
+  background: rgba(255,255,255,0.03); color: var(--white);
+  border-bottom-color: var(--white);
+}
+.comparison-table th.dim { color: var(--gray-500); }
+.comparison-table td {
+  padding: 18px 28px; font-size: 13px; border-bottom: 1px solid var(--gray-900);
+  font-family: var(--font-mono);
+}
+.comparison-table td:first-child { color: var(--gray-400); font-family: var(--font-display); font-size: 13px; }
+.comparison-table td.highlight { background: rgba(255,255,255,0.02); font-weight: 600; }
+.comparison-table td.dim { color: var(--gray-600); }
+.check { color: var(--white); }
+.cross { color: var(--gray-700); }
+.comparison-table tr:hover td { background: rgba(255,255,255,0.01); }
+.comparison-table tr:hover td.highlight { background: rgba(255,255,255,0.04); }
+
+/* ── TESTIMONIALS ── */
+#testimonials {
+  padding: 160px 60px; background: var(--gray-950);
+  border-top: 1px solid var(--gray-800);
+}
+.testimonials-header { margin-bottom: 80px; }
+.testimonials-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--gray-800);
+}
+.testimonial-card {
+  background: var(--gray-950); padding: 52px 44px;
+  transition: background 0.3s; position: relative;
+}
+.testimonial-card:hover { background: var(--gray-900); }
+.testimonial-quote {
+  font-size: 22px; font-weight: 400; line-height: 1.5;
+  letter-spacing: -0.5px; margin-bottom: 40px;
+  font-style: italic; font-family: Georgia, serif;
+  color: var(--gray-200);
+}
+.testimonial-author { display: flex; align-items: center; gap: 16px; }
+.author-avatar {
+  width: 44px; height: 44px; background: var(--gray-800);
+  border: 1px solid var(--gray-700); display: flex; align-items: center;
+  justify-content: center; font-size: 14px; font-weight: 700;
+  flex-shrink: 0;
+}
+.author-name { font-size: 14px; font-weight: 600; letter-spacing: -0.2px; margin-bottom: 3px; }
+.author-role { font-size: 11px; color: var(--gray-500); font-family: var(--font-mono); }
+.testimonial-company {
+  margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--gray-800);
+  font-size: 12px; color: var(--gray-600); font-family: var(--font-mono); letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ── FEATURES ── */
+#features {
+  padding: 160px 60px;
+}
+.features-header { text-align: center; margin-bottom: 80px; }
+.features-header .section-label { justify-content: center; }
+.features-header .section-label::before { display: none; }
+.features-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: var(--gray-800); border: 1px solid var(--gray-800);
+}
+.feature-card {
+  background: var(--black); padding: 40px 32px;
+  transition: background 0.3s; cursor: default;
+}
+.feature-card:hover { background: var(--gray-950); }
+.feature-icon {
+  width: 36px; height: 36px; border: 1px solid var(--gray-800);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px; font-size: 14px;
+}
+.feature-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.3px; }
+.feature-desc { font-size: 12px; color: var(--gray-500); line-height: 1.65; font-family: var(--font-mono); }
+
+/* ── FAQ ── */
+#faq {
+  padding: 160px 60px; background: var(--gray-950);
+  border-top: 1px solid var(--gray-800);
+}
+.faq-layout {
+  display: grid; grid-template-columns: 1fr 1.5fr; gap: 100px; align-items: start;
+}
+.faq-list { margin-top: 0; }
+.faq-item {
+  border-bottom: 1px solid var(--gray-800);
+}
+.faq-question {
+  width: 100%; background: none; border: none; color: var(--white);
+  text-align: left; padding: 28px 0; font-size: 16px; font-weight: 600;
+  cursor: none; display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-display); letter-spacing: -0.3px;
+  transition: color 0.2s;
+}
+.faq-question:hover { color: var(--gray-200); }
+.faq-icon {
+  width: 24px; height: 24px; border: 1px solid var(--gray-700);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0; transition: transform 0.3s, border-color 0.2s;
+}
+.faq-item.open .faq-icon { transform: rotate(45deg); border-color: var(--gray-500); }
+.faq-answer {
+  max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.faq-answer p {
+  padding: 0 0 28px; font-size: 14px; color: var(--gray-400); line-height: 1.8;
+}
+
+/* ── CTA ── */
+#cta {
+  padding: 160px 60px; background: var(--black);
+  text-align: center; border-top: 1px solid var(--gray-800);
+  position: relative; overflow: hidden;
+}
+.cta-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 60% at 50% 100%, rgba(255,255,255,0.04) 0%, transparent 100%);
+}
+.cta-eyebrow {
+  font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--gray-600); font-family: var(--font-mono); margin-bottom: 40px;
+}
+.cta-title {
+  font-size: clamp(60px, 8vw, 140px); font-weight: 800;
+  letter-spacing: -5px; line-height: 0.9; margin-bottom: 48px;
+}
+.cta-title em { font-style: italic; font-family: Georgia, serif; font-weight: 400; }
+.cta-sub {
+  font-size: 18px; color: var(--gray-400); line-height: 1.65;
+  max-width: 480px; margin: 0 auto 60px; font-weight: 400;
+}
+.cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn-cta-primary {
+  background: var(--white); color: var(--black);
+  padding: 18px 48px; font-size: 15px; font-weight: 600;
+  border: none; cursor: none; letter-spacing: 0.2px;
+  font-family: var(--font-display);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-cta-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 60px rgba(255,255,255,0.15); }
+.btn-cta-ghost {
+  background: none; border: 1px solid var(--gray-700);
+  color: var(--white); padding: 18px 48px; font-size: 15px;
+  font-weight: 500; cursor: none; letter-spacing: 0.2px;
+  font-family: var(--font-display); transition: border-color 0.2s;
+}
+.btn-cta-ghost:hover { border-color: var(--gray-400); }
+.cta-trust {
+  margin-top: 72px; display: flex; justify-content: center; align-items: center;
+  gap: 40px; flex-wrap: wrap;
+}
+.trust-item {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: var(--gray-600); font-family: var(--font-mono);
+}
+.trust-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gray-700); }
+
+/* ── FOOTER ── */
+footer {
+  padding: 80px 60px 48px; border-top: 1px solid var(--gray-900);
+  background: var(--black);
+}
+.footer-top {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 60px;
+  margin-bottom: 72px; padding-bottom: 72px;
+  border-bottom: 1px solid var(--gray-900);
+}
+.footer-brand { }
+.footer-logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 16px; }
+.footer-tagline { font-size: 13px; color: var(--gray-500); line-height: 1.7; max-width: 240px; margin-bottom: 28px; }
+.footer-social { display: flex; gap: 12px; }
+.social-link {
+  width: 36px; height: 36px; border: 1px solid var(--gray-800);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gray-500); font-size: 12px; font-family: var(--font-mono);
+  text-decoration: none; font-weight: 600; transition: all 0.2s;
+}
+.social-link:hover { border-color: var(--gray-600); color: var(--white); }
+.footer-col-title {
+  font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  font-family: var(--font-mono); margin-bottom: 24px; color: var(--white);
+}
+.footer-links { display: flex; flex-direction: column; gap: 12px; }
+.footer-links a {
+  font-size: 13px; color: var(--gray-500); text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--gray-200); }
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: gap;
+}
+.footer-legal { font-size: 12px; color: var(--gray-700); font-family: var(--font-mono); }
+.footer-legal-links { display: flex; gap: 32px; }
+.footer-legal-links a {
+  font-size: 12px; color: var(--gray-700); text-decoration: none;
+  font-family: var(--font-mono); transition: color 0.2s;
+}
+.footer-legal-links a:hover { color: var(--gray-400); }
+
+/* ── REVEAL ── */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── NOISE TEXTURE ── */
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9998;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.4;
+}
+
+/* ── PROGRESS BAR ── */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: var(--white); z-index: 9999;
+  width: 0%; transition: width 0.1s linear;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  nav { padding: 24px 32px; }
+  #hero, #stats, #infra, #banking, #crypto, #automation, #security,
+  #analytics, #timeline, #comparison, #testimonials, #features, #faq, #cta, footer { padding-left: 32px; padding-right: 32px; }
+  #hero { grid-template-columns: 1fr; }
+  .hero-visual { display: none; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .stat-item:nth-child(2) { border-right: none; }
+  .infra-layout, .banking-layout, .automation-layout, .security-layout, .analytics-layout, .faq-layout { grid-template-columns: 1fr; }
+  .infra-visual, .analytics-visual, .automation-visual { position: static; }
+  .crypto-grid, .testimonials-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .blackcard-perks { grid-template-columns: repeat(2, 1fr); }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+  .stats-top { grid-template-columns: 1fr; gap: 48px; }
+  .card-3d-wrapper { width: 100%; max-width: 380px; }
+  .comparison-table-wrapper { overflow-x: auto; }
+  .nav-links { display: none; }
+  .blackcard-title { letter-spacing: -2px; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-follower"></div>
+<div id="progress-bar"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">AuronPay</a>
+  <ul class="nav-links">
+    <li><a href="#infra">Infrastructure</a></li>
+    <li><a href="#banking">Banking</a></li>
+    <li><a href="#crypto">Crypto</a></li>
+    <li><a href="#security">Security</a></li>
+    <li><a href="#analytics">Analytics</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn-ghost">Sign in</button>
+    <button class="btn-solid">Get started</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Infrastructure Layer · Series B</div>
+    <h1 class="hero-title">
+      The financial<br>
+      infrastructure for<br>
+      <em>modern</em> companies.
+    </h1>
+    <p class="hero-sub">AuronPay provides the complete financial stack — payments, banking, crypto, cards and compliance — so you can build and scale without limits.</p>
+    <div class="hero-actions">
+      <button class="btn-hero-primary">Start building free</button>
+      <button class="btn-hero-secondary">Explore the platform</button>
+    </div>
+    <div class="hero-metrics">
+      <div>
+        <div class="hero-metric-value">$48B+</div>
+        <div class="hero-metric-label">Processed annually</div>
+      </div>
+      <div>
+        <div class="hero-metric-value">12,400</div>
+        <div class="hero-metric-label">Companies worldwide</div>
+      </div>
+      <div>
+        <div class="hero-metric-value">99.99%</div>
+        <div class="hero-metric-label">Uptime SLA</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div style="position:relative">
+      <div class="floating-pill">
+        <div class="pill-dot"></div>
+        Payment confirmed · $24,800
+      </div>
+      <div class="floating-pill">
+        <div class="pill-dot"></div>
+        PIX · Instant · R$ 8,500
+      </div>
+      <div class="hero-mockup">
+        <div class="mockup-glow"></div>
+        <div class="mockup-topbar">
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-url">app.auronpay.com/dashboard</div>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-header-row">
+            <div class="mockup-brand">AuronPay</div>
+            <div class="mockup-status">● LIVE</div>
+          </div>
+          <div class="mockup-balance-label">TOTAL BALANCE</div>
+          <div class="mockup-balance-value"><span>$</span>2,847,391</div>
+          <div class="mockup-grid">
+            <div class="mockup-tile">
+              <div class="mockup-tile-label">INFLOW</div>
+              <div class="mockup-tile-value">+$394K</div>
+              <div class="mockup-tile-change">↑ 18.4% vs last week</div>
+            </div>
+            <div class="mockup-tile">
+              <div class="mockup-tile-label">OUTFLOW</div>
+              <div class="mockup-tile-value">$128K</div>
+              <div class="mockup-tile-change">↓ 4.2% vs last week</div>
+            </div>
+          </div>
+          <div class="mockup-chart-area">
+            <svg class="mockup-chart-svg" viewBox="0 0 460 80" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(255,255,255,0.12)"/>
+                  <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,65 L40,60 L80,50 L120,55 L160,35 L200,40 L240,25 L280,30 L320,15 L360,20 L400,8 L460,12 L460,80 L0,80 Z" fill="url(#chartGrad)"/>
+              <path d="M0,65 L40,60 L80,50 L120,55 L160,35 L200,40 L240,25 L280,30 L320,15 L360,20 L400,8 L460,12" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="mockup-txn-row">
+            <div>
+              <div class="mockup-txn-name">Nexaflow Systems</div>
+              <div class="mockup-txn-meta">API · 2 min ago</div>
+            </div>
+            <div class="mockup-txn-amount">+$48,200</div>
+          </div>
+          <div class="mockup-txn-row">
+            <div>
+              <div class="mockup-txn-name">Orbis Commerce</div>
+              <div class="mockup-txn-meta">PIX · 8 min ago</div>
+            </div>
+            <div class="mockup-txn-amount">+$12,800</div>
+          </div>
+          <div class="mockup-txn-row">
+            <div>
+              <div class="mockup-txn-name">Vault Labs Inc.</div>
+              <div class="mockup-txn-meta">Card · 15 min ago</div>
+            </div>
+            <div class="mockup-txn-amount">+$7,450</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<section id="logos">
+  <div class="logos-label">Trusted by leading digital companies worldwide</div>
+  <div class="logos-track">
+    <div class="logo-item">Nexaflow</div>
+    <div class="logo-item">Orbis Commerce</div>
+    <div class="logo-item">Vault Labs</div>
+    <div class="logo-item">Prism Capital</div>
+    <div class="logo-item">Arcane Digital</div>
+    <div class="logo-item">Solstice Group</div>
+    <div class="logo-item">Meridian Co.</div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-top">
+    <div>
+      <div class="section-label reveal">Statistics</div>
+      <h2 class="section-title reveal reveal-delay-1">Numbers that<br><em>define</em> scale.</h2>
+    </div>
+    <div>
+      <p class="section-sub reveal reveal-delay-2">AuronPay processes billions of dollars each year across hundreds of markets. Our infrastructure supports companies at every stage — from seed to public.</p>
+    </div>
+  </div>
+  <div class="stats-grid reveal">
+    <div class="stat-item">
+      <div class="stat-number" data-target="48">$0<sup>B+</sup></div>
+      <div class="stat-label">Processed Annually</div>
+      <div class="stat-desc">Total transaction volume across all payment rails and markets.</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" data-target="12400">0</div>
+      <div class="stat-label">Companies</div>
+      <div class="stat-desc">From early-stage startups to publicly traded enterprises.</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">99.99<sup>%</sup></div>
+      <div class="stat-label">Uptime SLA</div>
+      <div class="stat-desc">Guaranteed availability backed by distributed infrastructure.</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">&lt;80<sup>ms</sup></div>
+      <div class="stat-label">API Latency</div>
+      <div class="stat-desc">Average global response time across all endpoints.</div>
+    </div>
+  </div>
+</section>
+
+<!-- INFRA -->
+<section id="infra">
+  <div class="infra-layout">
+    <div>
+      <div class="section-label reveal">Infrastructure</div>
+      <h2 class="section-title reveal reveal-delay-1">Every payment<br>rail. One <em>API.</em></h2>
+      <p class="section-sub reveal reveal-delay-2">We abstract the complexity of global payments into a single, unified interface. Cards, PIX, boleto, transfers, subscriptions — all accessible through one integration.</p>
+      <div class="infra-cards reveal reveal-delay-3">
+        <div class="infra-card">
+          <div class="infra-card-icon">⬡</div>
+          <div class="infra-card-title">PIX Instant</div>
+          <div class="infra-card-desc">24/7 instant transfers up to R$1B. Webhooks on confirmation.</div>
+        </div>
+        <div class="infra-card">
+          <div class="infra-card-icon">▣</div>
+          <div class="infra-card-title">Card Acquiring</div>
+          <div class="infra-card-desc">Visa, Mastercard, Elo. Debit, credit, international.</div>
+        </div>
+        <div class="infra-card">
+          <div class="infra-card-icon">⌘</div>
+          <div class="infra-card-title">Split Payments</div>
+          <div class="infra-card-desc">Marketplace splits with flexible recipient rules and schedules.</div>
+        </div>
+        <div class="infra-card">
+          <div class="infra-card-icon">◈</div>
+          <div class="infra-card-title">Checkout</div>
+          <div class="infra-card-desc">Hosted and embedded checkout. Conversion-optimized flows.</div>
+        </div>
+        <div class="infra-card">
+          <div class="infra-card-icon">⟳</div>
+          <div class="infra-card-title">Subscriptions</div>
+          <div class="infra-card-desc">Recurring billing with smart retry logic and dunning management.</div>
+        </div>
+        <div class="infra-card">
+          <div class="infra-card-icon">⊞</div>
+          <div class="infra-card-title">Boleto</div>
+          <div class="infra-card-desc">Boleto bancário with automatic conciliation and registration.</div>
+        </div>
+      </div>
+    </div>
+    <div class="infra-visual">
+      <div class="infra-terminal reveal reveal-delay-2">
+        <div class="terminal-header">
+          <div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div>
+          <div class="terminal-title">payment.create — AuronPay SDK</div>
+        </div>
+        <div class="terminal-body">
+          <div class="t-line"><span class="t-comment">// Initialize AuronPay</span></div>
+          <div class="t-line"><span class="t-key">const</span> <span class="t-str">auron</span> = <span class="t-key">new</span> <span class="t-num">AuronPay</span>(<span class="t-bracket">{</span></div>
+          <div class="t-line">&nbsp;&nbsp;<span class="t-key">apiKey</span>: <span class="t-str">'sk_live_••••••••••••••••'</span>,</div>
+          <div class="t-line">&nbsp;&nbsp;<span class="t-key">env</span>: <span class="t-str">'production'</span></div>
+          <div class="t-line"><span class="t-bracket">});</span></div>
+          <div class="t-line">&nbsp;</div>
+          <div class="t-line"><span class="t-comment">// Create payment intent</span></div>
+          <div class="t-line"><span class="t-key">const</span> <span class="t-str">intent</span> = <span class="t-key">await</span> auron.<span class="t-num">payments</span>.<span class="t-num">create</span>(<span class="t-bracket">{</span></div>
+          <div class="t-line">&nbsp;&nbsp;<span class="t-key">amount</span>: <span class="t-num">48200</span>,</div>
+          <div class="t-line">&nbsp;&nbsp;<span class="t-key">currency</span>: <span class="t-str">'BRL'</span>,</div>
+          <div class="t-line">&nbsp;&nbsp;<span class="t-key">method</span>: <span class="t-str">'pix'</span>,</div>
+          <div class="t-line">&nbsp;&nbsp;<span class="t-key">metadata</span>: <span class="t-bracket">{</span></div>
+          <div class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-key">orderId</span>: <span class="t-str">'ord_9f3a2c1b'</span>,</div>
+          <div class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-key">customerId</span>: <span class="t-str">'cus_8e4d7f2a'</span></div>
+          <div class="t-line">&nbsp;&nbsp;<span class="t-bracket">}</span></div>
+          <div class="t-line"><span class="t-bracket">});</span></div>
+          <div class="t-line">&nbsp;</div>
+          <div class="t-line"><span class="t-comment">// Response</span></div>
+          <div class="t-line"><span class="t-bracket">{</span></div>
+          <div class="t-line">&nbsp;&nbsp;<span class="t-key">id</span>: <span class="t-str">"pay_7c9b4e1a3f"</span>,</div>
+          <div class="t-line">&nbsp;&nbsp;<span class="t-key">status</span>: <span class="t-str">"pending"</span>,</div>
+          <div class="t-line">&nbsp;&nbsp;<span class="t-key">qr_code</span>: <span class="t-str">"00020126580014br.gov..."</span>,</div>
+          <div class="t-line">&nbsp;&nbsp;<span class="t-key">expires_at</span>: <span class="t-num">1719878400</span><span class="t-cursor"></span></div>
+          <div class="t-line"><span class="t-bracket">}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BANKING -->
+<section id="banking">
+  <div class="banking-layout">
+    <div class="banking-visual">
+      <div class="bank-card-stack reveal">
+        <div class="bank-card">
+          <div>
+            <div class="bank-card-chip"><div class="chip-cell"></div><div class="chip-cell"></div><div class="chip-cell"></div><div class="chip-cell"></div></div>
+          </div>
+          <div class="bank-card-number">•••• •••• •••• 4821</div>
+          <div class="bank-card-footer">
+            <div class="bank-card-name">AURONPAY BUSINESS</div>
+            <div class="bank-card-brand">AP</div>
+          </div>
+        </div>
+        <div class="bank-card">
+          <div class="bank-card-chip"><div class="chip-cell"></div><div class="chip-cell"></div><div class="chip-cell"></div><div class="chip-cell"></div></div>
+          <div class="bank-card-number">•••• •••• •••• 7304</div>
+          <div class="bank-card-footer">
+            <div class="bank-card-name">ENTERPRISE</div>
+            <div class="bank-card-brand">AP</div>
+          </div>
+        </div>
+        <div class="bank-card">
+          <div class="bank-card-chip"><div class="chip-cell"></div><div class="chip-cell"></div><div class="chip-cell"></div><div class="chip-cell"></div></div>
+          <div class="bank-card-number">•••• •••• •••• 1190</div>
+          <div class="bank-card-footer">
+            <div class="bank-card-name">STARTUP TIER</div>
+            <div class="bank-card-brand">AP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label reveal">Banking</div>
+      <h2 class="section-title reveal reveal-delay-1">Your complete<br><em>financial</em> account.</h2>
+      <p class="section-sub reveal reveal-delay-2">A fully operational digital bank account built for companies that move fast. No paperwork. No queues. No limits.</p>
+      <div class="banking-features reveal reveal-delay-3">
+        <div class="banking-feature">
+          <div class="feature-num">01</div>
+          <div class="feature-body">
+            <h4>Digital Account</h4>
+            <p>Multi-currency account with CNPJ. Instant opening. Full access to Brazilian financial system via BACEN.</p>
+          </div>
+        </div>
+        <div class="banking-feature">
+          <div class="feature-num">02</div>
+          <div class="feature-body">
+            <h4>Corporate Cards</h4>
+            <p>Unlimited virtual and physical cards. Custom spend limits per employee, team or project.</p>
+          </div>
+        </div>
+        <div class="banking-feature">
+          <div class="feature-num">03</div>
+          <div class="feature-body">
+            <h4>Treasury Management</h4>
+            <p>Sweep accounts, yield optimization, cash flow forecasting powered by real-time data.</p>
+          </div>
+        </div>
+        <div class="banking-feature">
+          <div class="feature-num">04</div>
+          <div class="feature-body">
+            <h4>International Transfers</h4>
+            <p>Send and receive in 30+ currencies at mid-market rates. SWIFT and SEPA supported.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CRYPTO -->
+<section id="crypto">
+  <div class="crypto-header">
+    <div class="section-label reveal">Crypto</div>
+    <h2 class="section-title reveal reveal-delay-1">Native <em>digital asset</em><br>infrastructure.</h2>
+    <p class="section-sub reveal reveal-delay-2" style="margin:0 auto">Accept, hold, convert and settle in major digital assets. Fully compliant, enterprise-grade custody.</p>
+  </div>
+  <div class="crypto-grid reveal">
+    <div class="crypto-card">
+      <div class="crypto-symbol">BTC · BITCOIN</div>
+      <div class="crypto-name">Bitcoin</div>
+      <div class="crypto-price">$67,240.00</div>
+      <div class="crypto-chart">
+        <svg viewBox="0 0 300 60" preserveAspectRatio="none">
+          <path d="M0,40 L30,38 L60,30 L90,35 L120,20 L150,22 L180,15 L210,18 L240,8 L270,10 L300,5" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="crypto-feature">Accept Bitcoin payments with automatic conversion to BRL or USD at settlement.</div>
+    </div>
+    <div class="crypto-card">
+      <div class="crypto-symbol">ETH · ETHEREUM</div>
+      <div class="crypto-name">Ethereum</div>
+      <div class="crypto-price">$3,482.00</div>
+      <div class="crypto-chart">
+        <svg viewBox="0 0 300 60" preserveAspectRatio="none">
+          <path d="M0,45 L40,42 L80,38 L120,40 L160,28 L200,25 L240,18 L300,10" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="crypto-feature">Full EVM compatibility. Smart contract payments and DeFi yield integration.</div>
+    </div>
+    <div class="crypto-card">
+      <div class="crypto-symbol">USDT · TETHER</div>
+      <div class="crypto-name">Tether</div>
+      <div class="crypto-price">$1.00</div>
+      <div class="crypto-chart">
+        <svg viewBox="0 0 300 60" preserveAspectRatio="none">
+          <path d="M0,30 L50,30 L100,31 L150,30 L200,30 L250,31 L300,30" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="crypto-feature">Stablecoin settlements across TRC20, ERC20 and BEP20 networks simultaneously.</div>
+    </div>
+  </div>
+  <div class="crypto-bottom reveal">
+    <div class="crypto-bottom-card">
+      <div class="crypto-bottom-title">Institutional Custody</div>
+      <div class="crypto-bottom-desc">Cold storage with multi-sig protection. Insurance coverage up to $250M. SOC 2 Type II certified.</div>
+    </div>
+    <div class="crypto-bottom-card">
+      <div class="crypto-bottom-title">Liquidity Engine</div>
+      <div class="crypto-bottom-desc">Best-price execution across 12 major exchanges. Slippage protection. Atomic swaps.</div>
+    </div>
+  </div>
+</section>
+
+<!-- BLACK CARD -->
+<section id="blackcard">
+  <div class="blackcard-label section-label reveal" style="justify-content:center">
+    AuronPay Black
+  </div>
+  <h2 class="blackcard-title reveal reveal-delay-1">The card that<br><em>defines</em> status.</h2>
+  <p class="blackcard-sub reveal reveal-delay-2">By invitation only. For companies processing over $10M annually. No limits. No compromises.</p>
+
+  <div class="card-3d-wrapper reveal reveal-delay-3" id="card3dWrapper">
+    <div class="card-3d" id="card3d">
+      <div class="card-shine"></div>
+      <div class="card-inner">
+        <div class="card-logo-row">
+          <div class="card-wordmark">AURONPAY</div>
+          <div class="card-contactless"></div>
+        </div>
+        <div class="card-chip-row">
+          <div class="card-chip-visual">
+            <div class="chip-c"></div><div class="chip-c"></div>
+            <div class="chip-c"></div><div class="chip-c"></div>
+          </div>
+          <div class="card-nfc">NFC · CONTACTLESS</div>
+        </div>
+        <div class="card-number-row">4891 •••• •••• 0012</div>
+        <div class="card-bottom">
+          <div class="card-holder">BLACK MEMBER</div>
+          <div class="card-brand-mark">AP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="blackcard-perks reveal reveal-delay-4">
+    <div class="perk-item">
+      <div class="perk-title">Unlimited Spend</div>
+      <div class="perk-desc">No monthly cap. No category restrictions. Spend as your business demands.</div>
+    </div>
+    <div class="perk-item">
+      <div class="perk-title">Global Acceptance</div>
+      <div class="perk-desc">Accepted in 190+ countries. Zero FX spread on international purchases.</div>
+    </div>
+    <div class="perk-item">
+      <div class="perk-title">Concierge 24/7</div>
+      <div class="perk-desc">Dedicated account manager. Priority support with 60-second response SLA.</div>
+    </div>
+    <div class="perk-item">
+      <div class="perk-title">Smart Rewards</div>
+      <div class="perk-desc">1.5% cashback on all spend. Real-time redemption to your account balance.</div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTOMATION -->
+<section id="automation">
+  <div class="automation-layout">
+    <div>
+      <div class="section-label reveal">Automation</div>
+      <h2 class="section-title reveal reveal-delay-1">Built for<br>engineers who<br><em>demand</em> more.</h2>
+      <p class="section-sub reveal reveal-delay-2">Our API is designed with developer experience as a first principle. RESTful, predictable, and exhaustively documented.</p>
+      <div class="automation-list reveal reveal-delay-3">
+        <div class="auto-item">
+          <div class="auto-num">01</div>
+          <div class="auto-content">
+            <h4>REST & GraphQL APIs</h4>
+            <p>Full-featured API with REST and GraphQL endpoints. Consistent response shapes. OpenAPI spec included.</p>
+          </div>
+        </div>
+        <div class="auto-item">
+          <div class="auto-num">02</div>
+          <div class="auto-content">
+            <h4>Event Webhooks</h4>
+            <p>Real-time events for every state change. Retry logic, signature verification and event replay.</p>
+          </div>
+        </div>
+        <div class="auto-item">
+          <div class="auto-num">03</div>
+          <div class="auto-content">
+            <h4>Native SDKs</h4>
+            <p>Official SDKs for Node.js, Python, Go, PHP, Ruby and Java. Community libraries for 20+ languages.</p>
+          </div>
+        </div>
+        <div class="auto-item">
+          <div class="auto-num">04</div>
+          <div class="auto-content">
+            <h4>No-Code Integrations</h4>
+            <p>One-click connections with Shopify, WooCommerce, SAP, Salesforce and 200+ platforms via Zapier.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="automation-visual">
+      <div class="api-flow reveal reveal-delay-2">
+        <div class="api-node">
+          <div class="api-node-icon">◎</div>
+          <div>
+            <div class="api-node-name">Client Application</div>
+            <div class="api-node-type">SOURCE · HTTPS/2</div>
+          </div>
+        </div>
+        <div class="api-connector"></div>
+        <div class="api-node">
+          <div class="api-node-icon">⬡</div>
+          <div>
+            <div class="api-node-name">AuronPay API Gateway</div>
+            <div class="api-node-type">INGRESS · TLS 1.3</div>
+          </div>
+        </div>
+        <div class="api-connector"></div>
+        <div class="api-node">
+          <div class="api-node-icon">▣</div>
+          <div>
+            <div class="api-node-name">Payment Orchestrator</div>
+            <div class="api-node-type">ROUTING · SMART</div>
+          </div>
+        </div>
+        <div class="api-connector"></div>
+        <div class="api-node">
+          <div class="api-node-icon">◈</div>
+          <div>
+            <div class="api-node-name">Risk Engine</div>
+            <div class="api-node-type">ML MODEL · &lt;12ms</div>
+          </div>
+        </div>
+        <div class="api-connector"></div>
+        <div class="api-node">
+          <div class="api-node-icon">⊞</div>
+          <div>
+            <div class="api-node-name">Acquirer Network</div>
+            <div class="api-node-type">SETTLEMENT · T+0</div>
+          </div>
+        </div>
+        <div class="api-connector"></div>
+        <div class="api-node">
+          <div class="api-node-icon">⟳</div>
+          <div>
+            <div class="api-node-name">Webhook Dispatch</div>
+            <div class="api-node-type">EVENT · REAL-TIME</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECURITY -->
+<section id="security">
+  <div class="security-layout">
+    <div>
+      <div class="section-label reveal">Security</div>
+      <h2 class="section-title reveal reveal-delay-1">Compliance<br>and security at<br><em>every layer.</em></h2>
+      <p class="section-sub reveal reveal-delay-2">AuronPay is regulated, audited and certified to the highest global standards. Your money and your customers' data are always protected.</p>
+      <div class="security-badges reveal reveal-delay-3">
+        <div class="sec-badge">
+          <div class="sec-badge-mark">PCI</div>
+          <div>
+            <div class="sec-badge-name">PCI DSS Level 1</div>
+            <div class="sec-badge-desc">Highest certification for cardholder data security.</div>
+          </div>
+        </div>
+        <div class="sec-badge">
+          <div class="sec-badge-mark">SOC</div>
+          <div>
+            <div class="sec-badge-name">SOC 2 Type II</div>
+            <div class="sec-badge-desc">Annual third-party security and availability audit.</div>
+          </div>
+        </div>
+        <div class="sec-badge">
+          <div class="sec-badge-mark">ISO</div>
+          <div>
+            <div class="sec-badge-name">ISO 27001 Certified</div>
+            <div class="sec-badge-desc">Information security management system certified.</div>
+          </div>
+        </div>
+        <div class="sec-badge">
+          <div class="sec-badge-mark">BCB</div>
+          <div>
+            <div class="sec-badge-name">BACEN Regulated</div>
+            <div class="sec-badge-desc">Licensed IP by Brazil Central Bank. Full regulatory compliance.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="security-grid reveal reveal-delay-2">
+      <div class="sec-card">
+        <div class="sec-icon">⊛</div>
+        <div class="sec-title">KYC / KYB</div>
+        <div class="sec-desc">Automated identity and business verification. Liveness detection.</div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-icon">◉</div>
+        <div class="sec-title">AML Engine</div>
+        <div class="sec-desc">Real-time transaction monitoring against global watchlists.</div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-icon">⬡</div>
+        <div class="sec-title">Fraud ML</div>
+        <div class="sec-desc">Proprietary machine learning model trained on $100B+ transactions.</div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-icon">▣</div>
+        <div class="sec-title">Encryption</div>
+        <div class="sec-desc">AES-256 at rest. TLS 1.3 in transit. End-to-end across all data.</div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-icon">◈</div>
+        <div class="sec-title">LGPD / GDPR</div>
+        <div class="sec-desc">Full compliance with Brazilian and European privacy regulations.</div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-icon">⊞</div>
+        <div class="sec-title">Chargeback Guard</div>
+        <div class="sec-desc">Automated dispute management with evidence generation engine.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANALYTICS -->
+<section id="analytics">
+  <div class="analytics-layout">
+    <div>
+      <div class="section-label reveal">Analytics</div>
+      <h2 class="section-title reveal reveal-delay-1">Data that<br>drives <em>decisions.</em></h2>
+      <p class="section-sub reveal reveal-delay-2">Real-time insights across every dimension of your financial operations. Dashboards, alerts and reports built for finance teams.</p>
+      <div class="analytics-features reveal reveal-delay-3">
+        <div class="analytics-feature">
+          <div class="auto-num">01</div>
+          <div class="auto-content">
+            <h4>Real-Time Dashboard</h4>
+            <p>Live transaction feed. Volume charts. Conversion funnel. All updating every 500ms.</p>
+          </div>
+        </div>
+        <div class="analytics-feature">
+          <div class="auto-num">02</div>
+          <div class="auto-content">
+            <h4>Revenue Recognition</h4>
+            <p>Automatic accrual and cash basis recognition. ASC 606 and IFRS 15 compliant exports.</p>
+          </div>
+        </div>
+        <div class="analytics-feature">
+          <div class="auto-num">03</div>
+          <div class="auto-content">
+            <h4>Custom Reports</h4>
+            <p>SQL-compatible query interface over your full transaction history. CSV, JSON and API export.</p>
+          </div>
+        </div>
+        <div class="analytics-feature">
+          <div class="auto-num">04</div>
+          <div class="auto-content">
+            <h4>Anomaly Alerts</h4>
+            <p>ML-powered anomaly detection. Configurable thresholds. Slack, email and webhook notifications.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="analytics-visual">
+      <div class="analytics-panel reveal reveal-delay-2">
+        <div class="analytics-panel-header">
+          <div class="analytics-panel-title">Transaction Volume</div>
+          <div class="analytics-panel-meta">Last 12 months · BRL</div>
+        </div>
+        <div class="analytics-chart-wrapper">
+          <div class="analytics-chart">
+            <div class="bar-chart">
+              <div class="bar-item"><div class="bar-fill" style="height:35%"></div><div class="bar-label">JAN</div></div>
+              <div class="bar-item"><div class="bar-fill" style="height:42%"></div><div class="bar-label">FEB</div></div>
+              <div class="bar-item"><div class="bar-fill" style="height:38%"></div><div class="bar-label">MAR</div></div>
+              <div class="bar-item"><div class="bar-fill" style="height:55%"></div><div class="bar-label">APR</div></div>
+              <div class="bar-item"><div class="bar-fill" style="height:60%"></div><div class="bar-label">MAY</div></div>
+              <div class="bar-item"><div class="bar-fill" style="height:52%"></div><div class="bar-label">JUN</div></div>
+              <div class="bar-item"><div class="bar-fill" style="height:68%"></div><div class="bar-label">JUL</div></div>
+              <div class="bar-item"><div class="bar-fill" style="height:75%"></div><div class="bar-label">AUG</div></div>
+              <div class="bar-item"><div class="bar-fill" style="height:72%"></div><div class="bar-label">SEP</div></div>
+              <div class="bar-item"><div class="bar-fill" style="height:84%"></div><div class="bar-label">OCT</div></div>
+              <div class="bar-item"><div class="bar-fill" style="height:90%"></div><div class="bar-label">NOV</div></div>
+              <div class="bar-item"><div class="bar-fill" style="height:100%;background:var(--white)"></div><div class="bar-label">DEC</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="analytics-sub-panels reveal reveal-delay-3">
+        <div class="mini-panel">
+          <div class="mini-panel-label">APPROVAL RATE</div>
+          <div class="mini-panel-value">97.4%</div>
+          <div class="mini-panel-trend">↑ +1.2% vs last quarter</div>
+        </div>
+        <div class="mini-panel">
+          <div class="mini-panel-label">AVG TICKET</div>
+          <div class="mini-panel-value">R$ 842</div>
+          <div class="mini-panel-trend">↑ +8.7% vs last quarter</div>
+        </div>
+        <div class="mini-panel">
+          <div class="mini-panel-label">CHARGEBACK RATE</div>
+          <div class="mini-panel-value">0.08%</div>
+          <div class="mini-panel-trend">↓ −0.04% vs last quarter</div>
+        </div>
+        <div class="mini-panel">
+          <div class="mini-panel-label">TIME TO SETTLE</div>
+          <div class="mini-panel-value">&lt;1 day</div>
+          <div class="mini-panel-trend">D+0 for eligible accounts</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline">
+  <div class="timeline-header">
+    <div class="section-label reveal">Growth Path</div>
+    <h2 class="section-title reveal reveal-delay-1">How companies<br>scale with <em>AuronPay.</em></h2>
+  </div>
+  <div class="timeline-track">
+    <div class="timeline-line"></div>
+    <div class="timeline-item reveal">
+      <div class="timeline-dot active">01</div>
+      <div class="timeline-content">
+        <div class="timeline-phase">Day 1</div>
+        <div class="timeline-title">Integrate in hours, not months.</div>
+        <div class="timeline-desc">Connect via API or no-code. Sandbox environment ready instantly. Your first payment live within 24 hours of signing up, guaranteed.</div>
+      </div>
+    </div>
+    <div class="timeline-item reveal reveal-delay-1">
+      <div class="timeline-dot">02</div>
+      <div class="timeline-content">
+        <div class="timeline-phase">Month 1</div>
+        <div class="timeline-title">Unlock your full payment stack.</div>
+        <div class="timeline-desc">Activate PIX, card acquiring, checkout and subscriptions. Your conversion rates rise as customers choose their preferred payment method.</div>
+      </div>
+    </div>
+    <div class="timeline-item reveal reveal-delay-2">
+      <div class="timeline-dot">03</div>
+      <div class="timeline-content">
+        <div class="timeline-phase">Month 6</div>
+        <div class="timeline-title">Open your AuronPay account.</div>
+        <div class="timeline-desc">Move your operating account to AuronPay. Earn yield on idle cash. Issue corporate cards for your team. Pay vendors directly from the platform.</div>
+      </div>
+    </div>
+    <div class="timeline-item reveal reveal-delay-3">
+      <div class="timeline-dot">04</div>
+      <div class="timeline-content">
+        <div class="timeline-phase">Year 1</div>
+        <div class="timeline-title">Automate your entire finance function.</div>
+        <div class="timeline-desc">Revenue recognition, reconciliation, tax reporting and compliance — all automated. Your finance team focuses on strategy, not spreadsheets.</div>
+      </div>
+    </div>
+    <div class="timeline-item reveal reveal-delay-4">
+      <div class="timeline-dot">05</div>
+      <div class="timeline-content">
+        <div class="timeline-phase">Year 2+</div>
+        <div class="timeline-title">Scale globally without friction.</div>
+        <div class="timeline-desc">Expand to new markets using AuronPay's global infrastructure. Accept crypto. Issue cards in new currencies. Process billions with zero added complexity.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section id="comparison">
+  <div class="comparison-header">
+    <div class="section-label reveal">Comparison</div>
+    <h2 class="section-title reveal reveal-delay-1">AuronPay vs<br>the <em>alternatives.</em></h2>
+    <p class="section-sub reveal reveal-delay-2">Traditional financial infrastructure wasn't built for the speed of modern digital business. We were.</p>
+  </div>
+  <div class="comparison-table-wrapper reveal reveal-delay-3">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="highlight">AuronPay</th>
+          <th class="dim">Legacy Banks</th>
+          <th class="dim">Traditional PSPs</th>
+          <th class="dim">Incumbent Fintechs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>API-first architecture</td><td class="highlight check">✓</td><td class="dim cross">✗</td><td class="dim cross">Partial</td><td class="dim">✓</td></tr>
+        <tr><td>Real-time settlement (D+0)</td><td class="highlight check">✓</td><td class="dim cross">✗</td><td class="dim cross">✗</td><td class="dim cross">Partial</td></tr>
+        <tr><td>Crypto integration</td><td class="highlight check">✓</td><td class="dim cross">✗</td><td class="dim cross">✗</td><td class="dim cross">✗</td></tr>
+        <tr><td>Embedded banking</td><td class="highlight check">✓</td><td class="dim cross">✗</td><td class="dim cross">✗</td><td class="dim cross">Partial</td></tr>
+        <tr><td>ML-powered fraud</td><td class="highlight check">✓</td><td class="dim cross">Basic</td><td class="dim cross">Basic</td><td class="dim">✓</td></tr>
+        <tr><td>Sub-80ms API response</td><td class="highlight check">✓</td><td class="dim cross">✗</td><td class="dim cross">✗</td><td class="dim cross">Partial</td></tr>
+        <tr><td>No-code integrations</td><td class="highlight check">200+</td><td class="dim cross">✗</td><td class="dim cross">Few</td><td class="dim">Some</td></tr>
+        <tr><td>Dedicated account manager</td><td class="highlight check">All plans</td><td class="dim cross">Enterprise only</td><td class="dim cross">Enterprise only</td><td class="dim cross">Enterprise only</td></tr>
+        <tr><td>Custom contract terms</td><td class="highlight check">✓</td><td class="dim cross">Complex</td><td class="dim cross">Limited</td><td class="dim cross">Limited</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="testimonials-header">
+    <div class="section-label reveal">Testimonials</div>
+    <h2 class="section-title reveal reveal-delay-1">Trusted by those<br>who build <em>differently.</em></h2>
+  </div>
+  <div class="testimonials-grid reveal">
+    <div class="testimonial-card">
+      <div class="testimonial-quote">"We replaced three payment providers and our entire banking infrastructure with AuronPay in 60 days. The API is genuinely a pleasure to work with."</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">MR</div>
+        <div>
+          <div class="author-name">Marcus Renard</div>
+          <div class="author-role">CTO · Nexaflow Systems</div>
+        </div>
+      </div>
+      <div class="testimonial-company">Nexaflow · Series B · $80M raised</div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-quote">"Our approval rate went from 89% to 97.4% in the first quarter. The ML fraud engine catches what others miss while letting legitimate transactions through."</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">SC</div>
+        <div>
+          <div class="author-name">Sofia Carvalho</div>
+          <div class="author-role">VP Finance · Orbis Commerce</div>
+        </div>
+      </div>
+      <div class="testimonial-company">Orbis Commerce · IPO 2023</div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-quote">"AuronPay's crypto infrastructure let us accept USDT payments from international clients on day one. No other platform even came close."</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">LP</div>
+        <div>
+          <div class="author-name">Lucas Park</div>
+          <div class="author-role">CEO · Arcane Digital</div>
+        </div>
+      </div>
+      <div class="testimonial-company">Arcane Digital · $120M GMV</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="features-header">
+    <div class="section-label reveal">Everything</div>
+    <h2 class="section-title reveal reveal-delay-1">The complete <em>platform.</em></h2>
+    <p class="section-sub reveal reveal-delay-2" style="margin:0 auto">Every financial primitive you need, from the first payment to the last mile of compliance.</p>
+  </div>
+  <div class="features-grid reveal reveal-delay-3">
+    <div class="feature-card"><div class="feature-icon">⬡</div><div class="feature-title">PIX & TED</div><div class="feature-desc">Instant transfers 24/7. Scheduled and recurring.</div></div>
+    <div class="feature-card"><div class="feature-icon">▣</div><div class="feature-title">Card Issuing</div><div class="feature-desc">Virtual and physical. BIN sponsorship included.</div></div>
+    <div class="feature-card"><div class="feature-icon">◈</div><div class="feature-title">Marketplace Split</div><div class="feature-desc">Multi-recipient splits with custom rules engine.</div></div>
+    <div class="feature-card"><div class="feature-icon">⊞</div><div class="feature-title">Boleto & BNPL</div><div class="feature-desc">Full boleto lifecycle. Buy now, pay later rails.</div></div>
+    <div class="feature-card"><div class="feature-icon">⟳</div><div class="feature-title">Subscriptions</div><div class="feature-desc">Recurring billing with smart dunning and retry.</div></div>
+    <div class="feature-card"><div class="feature-icon">◎</div><div class="feature-title">Link de Pagamento</div><div class="feature-desc">Shareable payment links. No code required.</div></div>
+    <div class="feature-card"><div class="feature-icon">⊛</div><div class="feature-title">Multi-Currency</div><div class="feature-desc">Accept in 30+ currencies. Auto-settle to BRL.</div></div>
+    <div class="feature-card"><div class="feature-icon">◉</div><div class="feature-title">Open Finance</div><div class="feature-desc">BACEN Open Finance data aggregation and consent.</div></div>
+    <div class="feature-card"><div class="feature-icon">⬡</div><div class="feature-title">Invoice Engine</div><div class="feature-desc">Automated NF-e and NFS-e. Tax calculation.</div></div>
+    <div class="feature-card"><div class="feature-icon">▣</div><div class="feature-title">Reconciliation</div><div class="feature-desc">Automatic bank and card reconciliation daily.</div></div>
+    <div class="feature-card"><div class="feature-icon">◈</div><div class="feature-title">Treasury</div><div class="feature-desc">Yield on idle balances. Cash flow forecasting.</div></div>
+    <div class="feature-card"><div class="feature-icon">⊞</div><div class="feature-title">FX & Remittance</div><div class="feature-desc">International transfers at mid-market rates.</div></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="faq-layout">
+    <div>
+      <div class="section-label reveal">FAQ</div>
+      <h2 class="section-title reveal reveal-delay-1">Questions<br><em>answered.</em></h2>
+      <p class="section-sub reveal reveal-delay-2">Everything you need to know before getting started.</p>
+    </div>
+    <div class="faq-list reveal reveal-delay-2">
+      <div class="faq-item open">
+        <button class="faq-question">How long does onboarding take?<div class="faq-icon">+</div></button>
+        <div class="faq-answer" style="max-height:200px"><p>API access is granted within minutes of signing up. Full KYB verification for your company typically takes 1-3 business days. Once verified, you can go live immediately. Our onboarding team provides hands-on support throughout the process.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">What are the fees?<div class="faq-icon">+</div></button>
+        <div class="faq-answer"><p>We offer transparent, volume-based pricing. No monthly minimums. No setup fees. No hidden costs. Pay only for what you process. Enterprise contracts with custom rates are available for companies processing over R$10M/month.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Is AuronPay regulated?<div class="faq-icon">+</div></button>
+        <div class="faq-answer"><p>Yes. AuronPay is licensed as an Institution of Payment (IP) by the Central Bank of Brazil (BACEN). We hold PCI DSS Level 1 certification and undergo annual SOC 2 Type II audits. All client funds are held in segregated accounts.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Can I migrate from another provider?<div class="faq-icon">+</div></button>
+        <div class="faq-answer"><p>Absolutely. Our migration team handles the entire process, including data transfer, webhook reconfiguration and parallel running periods to ensure zero downtime. Most migrations complete within two weeks.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">What is the uptime SLA?<div class="faq-icon">+</div></button>
+        <div class="faq-answer"><p>We guarantee 99.99% uptime, backed by financial credits if we fail to meet that commitment. Our infrastructure runs on multi-region active-active deployment across three Brazilian availability zones and two international regions.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Do you support international businesses?<div class="faq-icon">+</div></button>
+        <div class="faq-answer"><p>Yes. AuronPay supports foreign companies operating in Brazil as well as Brazilian companies selling internationally. We handle all cross-border compliance, FX conversion and local payment method integration.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-bg"></div>
+  <div class="cta-eyebrow reveal">Start Today · No Credit Card Required</div>
+  <h2 class="cta-title reveal reveal-delay-1">
+    Build the<br><em>future</em> of<br>finance.
+  </h2>
+  <p class="cta-sub reveal reveal-delay-2">Join 12,400 companies that chose infrastructure over compromise. Your first payment in under 24 hours.</p>
+  <div class="cta-actions reveal reveal-delay-3">
+    <button class="btn-cta-primary">Start building free</button>
+    <button class="btn-cta-ghost">Talk to sales</button>
+  </div>
+  <div class="cta-trust reveal reveal-delay-4">
+    <div class="trust-item"><div class="trust-dot"></div>No setup fees</div>
+    <div class="trust-item"><div class="trust-dot"></div>Cancel anytime</div>
+    <div class="trust-item"><div class="trust-dot"></div>BACEN regulated</div>
+    <div class="trust-item"><div class="trust-dot"></div>PCI DSS Level 1</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo">AuronPay</div>
+      <div class="footer-tagline">The financial infrastructure for modern companies. Regulated, secure, and built to scale.</div>
+      <div class="footer-social">
+        <a href="#" class="social-link">Li</a>
+        <a href="#" class="social-link">Tw</a>
+        <a href="#" class="social-link">Gh</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Products</div>
+      <div class="footer-links">
+        <a href="#">Payments</a>
+        <a href="#">Banking</a>
+        <a href="#">Cards</a>
+        <a href="#">Crypto</a>
+        <a href="#">Analytics</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Developers</div>
+      <div class="footer-links">
+        <a href="#">Documentation</a>
+        <a href="#">API Reference</a>
+        <a href="#">SDKs</a>
+        <a href="#">Changelog</a>
+        <a href="#">Status</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <div class="footer-links">
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Legal</div>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Security</a>
+        <a href="#">Compliance</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-legal">© 2024 AuronPay Instituição de Pagamento S.A. · CNPJ 00.000.000/0001-00 · Licensed by BACEN</div>
+    <div class="footer-legal-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookie Settings</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('follower') || document.getElementById('cursor-follower');
+let mx = 0, my = 0, fx = 0, fy = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px)`;
+});
+function animateFollower() {
+  fx += (mx - fx - 20) * 0.12;
+  fy += (my - fy - 20) * 0.12;
+  follower.style.transform = `translate(${fx}px, ${fy}px)`;
+  requestAnimationFrame(animateFollower);
+}
+animateFollower();
+document.querySelectorAll('a, button, .infra-card, .crypto-card, .testimonial-card, .feature-card, .sec-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform += ' scale(1.5)';
+    follower.style.width = '60px';
+    follower.style.height = '60px';
+    follower.style.opacity = '0.6';
+  });
+  el.addEventListener('mouseleave', () => {
+    follower.style.width = '40px';
+    follower.style.height = '40px';
+    follower.style.opacity = '1';
+  });
+});
+
+// ── PROGRESS BAR ──
+const progressBar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  progressBar.style.width = scrolled + '%';
+});
+
+// ── NAV SCROLL ──
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 60) navbar.classList.add('scrolled');
+  else navbar.classList.remove('scrolled');
+});
+
+// ── REVEAL ON SCROLL ──
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+revealEls.forEach(el => observer.observe(el));
+
+// ── BLACK CARD 3D TILT ──
+const cardWrapper = document.getElementById('card3dWrapper');
+const card3d = document.getElementById('card3d');
+if (cardWrapper && card3d) {
+  cardWrapper.addEventListener('mousemove', (e) => {
+    const rect = cardWrapper.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const rx = (e.clientY - cy) / (rect.height / 2) * -15;
+    const ry = (e.clientX - cx) / (rect.width / 2) * 15;
+    card3d.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+  });
+  cardWrapper.addEventListener('mouseleave', () => {
+    card3d.style.transform = 'rotateX(0) rotateY(0)';
+  });
+}
+
+// ── FAQ ACCORDION ──
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const answer = item.querySelector('.faq-answer');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.faq-answer').style.maxHeight = '0';
+    });
+    if (!isOpen) {
+      item.classList.add('open');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  });
+});
+// Init first item
+const firstFaq = document.querySelector('.faq-item.open .faq-answer');
+if (firstFaq) firstFaq.style.maxHeight = firstFaq.scrollHeight + 'px';
+
+// ── COUNTER ANIMATION ──
+function animateCounter(el, target, prefix, suffix) {
+  let start = 0;
+  const duration = 2000;
+  const step = timestamp => {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.floor(eased * target);
+    el.innerHTML = prefix + current.toLocaleString() + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+const statsObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = parseInt(el.dataset.target);
+      if (el.innerHTML.includes('$')) animateCounter(el, target, '$', '<sup>B+</sup>');
+      else animateCounter(el, target, '', '');
+      statsObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-number[data-target]').forEach(el => statsObserver.observe(el));
+
+// ── GSAP SCROLL ANIMATIONS ──
+if (window.gsap && window.ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Hero title stagger
+  gsap.from('.hero-title', {
+    duration: 1.2, y: 60, opacity: 0, ease: 'power4.out', delay: 0.2
+  });
+  gsap.from('.hero-badge', {
+    duration: 0.8, y: 20, opacity: 0, ease: 'power3.out', delay: 0
+  });
+  gsap.from('.hero-sub', {
+    duration: 1, y: 30, opacity: 0, ease: 'power3.out', delay: 0.5
+  });
+  gsap.from('.hero-actions', {
+    duration: 0.8, y: 20, opacity: 0, ease: 'power3.out', delay: 0.7
+  });
+  gsap.from('.hero-metrics', {
+    duration: 0.8, y: 20, opacity: 0, ease: 'power3.out', delay: 0.9
+  });
+  gsap.from('.hero-mockup', {
+    duration: 1.4, y: 80, opacity: 0, ease: 'power4.out', delay: 0.4
+  });
+  gsap.from('.floating-pill', {
+    duration: 1, y: 40, opacity: 0, ease: 'power3.out', delay: 1.2, stagger: 0.2
+  });
+
+  // Logo items
+  gsap.from('.logo-item', {
+    scrollTrigger: { trigger: '#logos', start: 'top 80%' },
+    duration: 0.6, y: 20, opacity: 0, stagger: 0.08, ease: 'power3.out'
+  });
+
+  // Stat numbers
+  gsap.from('.stat-item', {
+    scrollTrigger: { trigger: '#stats', start: 'top 70%' },
+    duration: 0.8, y: 40, opacity: 0, stagger: 0.1, ease: 'power3.out'
+  });
+
+  // Parallax hero grid
+  gsap.to('.hero-bg-grid', {
+    scrollTrigger: { trigger: '#hero', scrub: true },
+    y: -80, ease: 'none'
+  });
+
+  // Mockup parallax
+  gsap.to('.hero-mockup', {
+    scrollTrigger: { trigger: '#hero', scrub: 1 },
+    y: -60, ease: 'none'
+  });
+}
+
+// ── SMOOTH SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>
+HTMLEOF
+echo "Done. File size: $(wc -c < /mnt/user-data/outputs/index.html) bytes"
